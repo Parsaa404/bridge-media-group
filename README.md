@@ -1,20 +1,40 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
-</div>
+# Bridge Media Group
 
-# Run and deploy your AI Studio app
+A modern React application built with Vite, designed for performance and scalability.
 
-This contains everything you need to run your app locally.
+## 🚀 Quick Start
 
-View your app in AI Studio: https://ai.studio/apps/temp/1
+### Prerequisites
+- Node.js (v18+)
+- Docker (optional, for deployment)
 
-## Run Locally
+### Development
+```bash
+npm install
+npm run dev
+```
 
-**Prerequisites:**  Node.js
+## 📦 Deployment
 
+This project is fully containerized with Docker and includes an automated setup script for easy deployment on any VPS.
 
-1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+### 1-Click Deployment (VPS)
+1. Clone the repo:
+   ```bash
+   git clone https://github.com/Parsaa404/bridge-media-group.git
+   cd bridge-media-group
+   ```
+2. Run the setup script:
+   ```bash
+   chmod +x setup.sh
+   ./setup.sh
+   ```
+
+For full details, read [DEPLOYMENT.md](./DEPLOYMENT.md).
+
+## 🔄 Updating the Server
+To update your running server with the latest changes from GitHub:
+```bash
+chmod +x update.sh
+./update.sh
+```
