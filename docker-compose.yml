@@ -2,10 +2,47 @@ services:
   web:
     build: .
     restart: always
-    container_name: bridge-app
+    container_name: bridge-frontend
     expose:
       - "80"
+    depends_on:
+      db:
+        condition: service_healthy
+      backend:
+        condition: service_started
 
+  backend:
+    build: ./server
+    restart: always
+    container_name: bridge-backend
+    ports:
+      - "3001:3001"
+    volumes:
+      - ./server/.env:/app/.env
+    environment:
+      - DATABASE_URL=mysql://root:${MYSQL_ROOT_PASSWORD}@db:3306/${MYSQL_DATABASE}
+      - PORT=3001
+      - INIT_API_KEY=${INIT_API_KEY}
+    depends_on:
+      db:
+        condition: service_healthy
+
+  db:
+    image: mysql:8.0
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+    ports:
+      - "3306:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "--silent"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
   caddy:
     image: caddy:latest
     restart: always
@@ -18,7 +55,9 @@ services:
       - caddy_config:/config
     depends_on:
       - web
+      - backend
 
 volumes:
   caddy_data:
   caddy_config:
+  db_data:

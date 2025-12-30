@@ -1,40 +1,71 @@
 # Bridge Media Group
 
-A modern React application built with Vite, designed for performance and scalability.
+A React application for Bridge Media Group, featuring distinct sections for TV, Events, Property, and Iran Bridge.
 
-## 🚀 Quick Start
+## Getting Started
 
 ### Prerequisites
+
 - Node.js (v18+)
-- Docker (optional, for deployment)
+- Docker & Docker Compose
 
-### Development
-```bash
-npm install
-npm run dev
-```
+### Local Development
 
-## 📦 Deployment
+1.  **Clone the repository:**
+    ```bash
+    git clone <repository_url>
+    cd bridge-media-group
+    ```
 
-This project is fully containerized with Docker and includes an automated setup script for easy deployment on any VPS.
+2.  **Environment Setup:**
+    
+    Copy the example environment file to `.env`:
+    ```bash
+    cp .env.example .env
+    ```
+    
+    Update `.env` with secure passwords. **Do not commit the `.env` file to version control.**
+    
+    You can generate strong secrets using:
+    ```bash
+    openssl rand -base64 32
+    ```
 
-### 1-Click Deployment (VPS)
-1. Clone the repo:
-   ```bash
-   git clone https://github.com/Parsaa404/bridge-media-group.git
-   cd bridge-media-group
-   ```
-2. Run the setup script:
-   ```bash
-   chmod +x setup.sh
-   ./setup.sh
-   ```
+3.  **Run with Docker:**
+    ```bash
+    docker compose up -d --build
+    ```
+    This will start the Frontend, Backend, Database, and Caddy reverse proxy.
 
-For full details, read [DEPLOYMENT.md](./DEPLOYMENT.md).
+4.  **Access the Application:**
+    -   Main Site: `http://localhost` (or your configured domain)
+    -   Subdomains: `http://tv.localhost`, `http://event.localhost`, etc.
 
-## 🔄 Updating the Server
-To update your running server with the latest changes from GitHub:
-```bash
-chmod +x update.sh
-./update.sh
-```
+### Manual Setup (Without Docker)
+
+1.  **Frontend:**
+    ```bash
+    npm install
+    npm run dev
+    ```
+
+2.  **Backend:**
+    ```bash
+    cd server
+    npm install
+    npx prisma migrate dev
+    node index.js
+    ```
+
+## Deployment
+
+Use the included helper scripts for easy deployment:
+
+-   **Setup:** `./setup.sh` - interactive setup script.
+-   **Update:** `./update.sh` - pulls latest changes and restarts services.
+
+## Project Structure
+
+-   `src/`: Frontend React application
+-   `server/`: Backend Express application & Prisma ORM
+-   `components/`: Reusable UI components

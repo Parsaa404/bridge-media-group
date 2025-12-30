@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import psl from 'psl';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
 import About from './components/About';
@@ -6,17 +7,23 @@ import Section from './components/Section';
 import Contact from './components/Contact';
 import Footer from './components/Footer';
 
-const App: React.FC = () => {
+// Pages
+import TvBridgePage from './src/pages/TvBridgePage';
+import EventBridgePage from './src/pages/EventBridgePage';
+import PropertyPage from './src/pages/PropertyPage';
+import IranBridgePage from './src/pages/IranBridgePage';
+
+const LandingPage: React.FC = () => {
   return (
     <div className="min-h-screen bg-slate-950 font-sans text-white">
       <Navbar />
-      
+
       <main>
         <Hero />
-        
+
         <About />
-        
-        <Section 
+
+        <Section
           id="tv"
           title="IRAN BRIDGE TV"
           subtitle="Broadcasting"
@@ -31,7 +38,7 @@ const App: React.FC = () => {
           colorTheme="blue"
         />
 
-        <Section 
+        <Section
           id="event"
           title="BRIDGE EVENT"
           subtitle="Live Entertainment"
@@ -47,7 +54,7 @@ const App: React.FC = () => {
           colorTheme="purple"
         />
 
-        <Section 
+        <Section
           id="property"
           title="BRIDGE PROPERTY"
           subtitle="Real Estate Assets"
@@ -68,6 +75,48 @@ const App: React.FC = () => {
       <Footer />
     </div>
   );
+};
+
+const App: React.FC = () => {
+  const [subdomain, setSubdomain] = useState<string>('');
+
+  useEffect(() => {
+    const host = window.location.hostname;
+    // Handle localhost specially or dev domains
+    if (host.includes('localhost')) {
+      const parts = host.split('.');
+      // e.g. tv.localhost -> parts[0] is subdomain
+      if (parts.length > 1 && parts[0] !== 'www') {
+        setSubdomain(parts[0]);
+        return;
+      }
+    }
+
+    // Use PSL for production domains
+    const parsed = psl.parse(host);
+
+    // Check if parsed is not an error
+    if (parsed && !('error' in parsed)) {
+      // Explicitly cast to ParsedDomain to satisfy TypeScript if inference fails
+      const domainData = parsed as psl.ParsedDomain;
+      if (domainData.subdomain) {
+        setSubdomain(domainData.subdomain);
+      } else {
+        setSubdomain('');
+      }
+    } else {
+      setSubdomain('');
+    }
+  }, []);
+
+  // Simple Router based on subdomain
+  if (subdomain === 'tv') return <TvBridgePage />;
+  if (subdomain === 'event') return <EventBridgePage />;
+  if (subdomain === 'property') return <PropertyPage />;
+  if (subdomain === 'iran') return <IranBridgePage />;
+
+  // Default to Landing Page
+  return <LandingPage />;
 };
 
 export default App;
