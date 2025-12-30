@@ -60,8 +60,13 @@ EOF
 fi
 
 # Always update server/.env to stay in sync
+# Always update server/.env to stay in sync
 echo "Updating server/.env..."
 mkdir -p server
+# Safety check: if server/.env is a directory, remove it
+if [ -d "server/.env" ]; then
+    rm -rf server/.env
+fi
 cat > server/.env <<EOF
 DATABASE_URL="mysql://root:${MYSQL_PASSWORD}@db:3306/bridge_db"
 PORT=3001
