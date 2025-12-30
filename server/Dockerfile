@@ -5,7 +5,7 @@ WORKDIR /app
 COPY package*.json ./
 COPY prisma ./prisma/
 
-RUN npm ci --only=production && npx prisma generate
+RUN npm install --only=production && npx prisma generate
 COPY . .
 
 EXPOSE 3001
