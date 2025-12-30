@@ -11,6 +11,14 @@ echo "========================================"
 echo "-> Pulling latest changes from GitHub..."
 git pull origin main
 
+# 0. Check for environment
+if [ -f .env ]; then
+    echo "-> Loading environment variables..."
+    export $(grep -v '^#' .env | xargs)
+else
+    echo "Warning: .env file not found. Ensure environment variables are set or run ./setup.sh first."
+fi
+
 # 2. Rebuild and restart containers
 echo "-> Rebuilding and restarting containers..."
 docker compose down
